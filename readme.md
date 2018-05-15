@@ -27,3 +27,21 @@ re-adding files from the old model module. You can install the latest version of
 1.  Install `nltk` through `pip`: `pip install nltk`
 2.  Clone this repository in your project directory: `git clone https://github.com/sleepyfoxen/nltk_model.git`
 3.  Import it and use it in your code: `from nltk_model import NgramModel, LgramModel`
+
+## Example
+
+```python
+from nltk_model import *
+from nltk.corpus import brown
+from nltk.probability import LidstoneProbDist
+
+
+est = lambda fdist, bins: LidstoneProbDist(fdist, 0.2)
+lm = NgramModel(3, brown.words(categories='news'), estimator=est)
+print(lm)
+print(lm._backoff)
+print(lm.entropy(['The', 'Fulton', 'County', 'Grand', 'Jury', 'said',
+                 'Friday', 'an', 'investigation', 'of', "Atlanta's", 'recent',
+                 'primary', 'election', 'produced', '``', 'no', 'evidence',
+                 "''", 'that', 'any', 'irregularities', 'took', 'place', '.']))
+```
