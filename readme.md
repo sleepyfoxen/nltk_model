@@ -5,7 +5,7 @@ code for text analysis. Although [there are efforts](https://github.com/nltk/nlt
 resuscitate the module, it is still not present in NLTK version 3.3 -- and 
 [the nltk/model branch](https://github.com/nltk/nltk/tree/model) has not been active in several years.
 
-As such, I am adapting the model code from [an older version of NLTK](https://github.com/nltk/nltk/blob/2.0.4/).
+As such, I am adapting the model code from [an older version of NLTK](https://github.com/nltk/nltk/tree/2.0.4/).
 Alternatively, one could just install and use NLTK version 2.0.4. However, hopefully, the `nltk.model` will return
 to the upstream.
 
