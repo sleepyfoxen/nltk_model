@@ -1,13 +1,14 @@
 # The NLTK Model module
 
-The module in `ntlk.model` was removed in NLTK version 3, however it provides some very helpful
-code for text analysis. Although [there are efforts](https://github.com/nltk/nltk/issues/1342) to
-resuscitate the module, it is still not present in NLTK version 3.3 -- and 
-[the nltk/model branch](https://github.com/nltk/nltk/tree/model) has not been active in several years.
+**Please see nltk.lm for a supported version of the NLTK model code**
 
-As such, I am adapting the model code from [an older version of NLTK](https://github.com/nltk/nltk/tree/2.0.4/).
-Alternatively, one could just install and use NLTK version 2.0.4. However, hopefully, the `nltk.model` will return
-to the upstream.
+The module in `ntlk.model` was removed in NLTK version 3, however it provides some very helpful
+code for text analysis. Now, however, nltk upstream has a new language model. You should use that API instead of this
+one, unless you really need support for some old code -- as this is less well-maintained.
+
+
+I am adapting the model code from [an older version of NLTK](https://github.com/nltk/nltk/tree/2.0.4/).
+Alternatively, one could just install and use NLTK version 2.0.4.
 
 This code is (barely) modified so that the imports resolve; there are no substantive changes to the code
 other than updating for Python 3 and referencing new NLTK method names. However, I have also included the LgramModel
