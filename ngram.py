@@ -6,6 +6,8 @@
 # URL: <http://www.nltk.org/>
 # For license information, see LICENSE.TXT
 
+import types
+
 from itertools import chain
 from math import log
 
@@ -92,8 +94,8 @@ class NgramModel(ModelI):
         self._ngrams = set()
 
         # If given a list of strings instead of a list of lists, create enclosing list
-        if (train is not None) and isinstance(train[0], str):
-            train = [train]
+        if (train is not None) and (isinstance(train, types.GeneratorType) or isinstance(train[0], str)):
+            train = [t for t in train]
 
         for sent in train:
             for ngram in ingrams(chain(self._lpad, sent, self._rpad), n):
@@ -197,7 +199,7 @@ class NgramModel(ModelI):
         """
 
         e = 0.0
-        text = list(self._lpad) + text + list(self._rpad)
+        text = list(self._lpad) + list(text) + list(self._rpad)
         for i in range(self._n - 1, len(text)):
             context = tuple(text[i - self._n + 1:i])
             token = text[i]

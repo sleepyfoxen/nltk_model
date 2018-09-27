@@ -12,7 +12,6 @@ class LgramModel(NgramModel):
         # can't be an instance method of NgramModel as they
         # can't be pickled either.
         res = WittenBellProbDist(fdist, fdist.B() + 1)
-        res.check()
         return res
 
     def __init__(self, n, train, pad_left=False, pad_right=False,
