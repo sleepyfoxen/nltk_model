@@ -12,18 +12,37 @@ from itertools import chain
 from math import log
 
 from nltk.probability import (ConditionalProbDist, ConditionalFreqDist,
-                              SimpleGoodTuringProbDist)
+                              MLEProbDist, FreqDist,
+                              SimpleGoodTuringProbDist,
+                              WittenBellProbDist)
 from nltk.util import ngrams as ingrams
 from .api import ModelI
+
+def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+    # http://stackoverflow.com/a/33024979
+    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
+def discount(self):
+    return float(self._N)/float(self._N + self._T)
+
+def check(self):
+    totProb=sum(self.prob(sample) for sample in self.samples())
+    assert isclose(self.discount(),totProb),\
+           'discount %s != totProb %s' % (self.discount(), totProb)
+
+WittenBellProbDist.discount = discount
+WittenBellProbDist.check = check
 
 
 def _estimator(fdist, bins):
     """
-    Default estimator function using a SimpleGoodTuringProbDist.
+    Default estimator function using WB.
     """
     # can't be an instance method of NgramModel as they
     # can't be pickled either.
-    return SimpleGoodTuringProbDist(fdist)
+    res = WittenBellProbDist(fdist, fdist.B() + 1)
+    res.check()
+    return res
 
 
 class NgramModel(ModelI):
