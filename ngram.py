@@ -18,17 +18,23 @@ from nltk.probability import (ConditionalProbDist, ConditionalFreqDist,
 from nltk.util import ngrams as ingrams
 from .api import ModelI
 
+
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     # http://stackoverflow.com/a/33024979
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
+
 def discount(self):
-    return float(self._N)/float(self._N + self._T)
+    if self._N == 0:
+        return 0.0
+    return float(self._N) / float(self._N + self._T)
+
 
 def check(self):
     totProb=sum(self.prob(sample) for sample in self.samples())
     assert isclose(self.discount(),totProb),\
            'discount %s != totProb %s' % (self.discount(), totProb)
+
 
 WittenBellProbDist.discount = discount
 WittenBellProbDist.check = check
