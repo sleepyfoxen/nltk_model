@@ -231,11 +231,11 @@ class NgramModel(ModelI):
             alpha=self._alpha(context)
             if alpha>0.0:
                 if verbose:
-                    print (u"backing off for %s"%(context+(word,),)).encode("utf-8")
+                    print ((u"backing off for %s"%(context+(word,),)).encode("utf-8"))
                 return alpha * self._backoff.prob(word, context[1:],verbose)
             else:
                 if verbose:
-                    print (u'no backoff for "%s" as model doesn\'t do any smoothing so prob=0.0'%word).encode("utf-8")
+                    print ((u'no backoff for "%s" as model doesn\'t do any smoothing so prob=0.0'%word).encode("utf-8"))
                 return alpha
 
     def _alpha(self, context,verbose=False):
@@ -249,7 +249,7 @@ class NgramModel(ModelI):
         else:
             res = 1
         if verbose:
-            print (u" alpha: %s = %s"%(context,res)).encode("utf-8")
+            print ((u" alpha: %s = %s"%(context,res)).encode("utf-8"))
         return res
 
 
@@ -338,7 +338,7 @@ class NgramModel(ModelI):
             cost=self.logprob(token, context, verbose)  # _negative_
                                                         # log2 prob == cost!
             if verbose:
-                print (u"p(%s|%s) = [%s-gram] %7f"%(token,context,self._n,2**-cost)).encode("utf-8")
+                print ((u"p(%s|%s) = [%s-gram] %7f"%(token,context,self._n,2**-cost)).encode("utf-8"))
             e += cost
         if perItem:
             return e/((len(text)+self._padLen)-(self._n - 1))
