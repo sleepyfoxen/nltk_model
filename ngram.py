@@ -5,7 +5,7 @@
 # URL: <http://www.nltk.org/>
 # For license information, see LICENSE.TXT
 
-import random, collections
+import random, collections.abc
 from itertools import chain
 from math import log
 
@@ -15,7 +15,10 @@ from nltk.probability import (ConditionalProbDist, ConditionalFreqDist,
 from nltk.util import ngrams as ingrams
 
 from nltk import compat
-from .api import *
+try:
+    from api import *
+except ImportError:
+    from .api import *
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     # http://stackoverflow.com/a/33024979
@@ -107,7 +110,7 @@ class NgramModel(ModelI):
             estimator = lambda fdist, bins: MLEProbDist(fdist)
 
         # Given backoff, a generator isn't acceptable
-        if not isinstance(train,collections.Sequence):
+        if not isinstance(train,collections.abc.Sequence):
           train=list(train)
         self._W = len(train)
         # Coerce to list of list -- note that this means to train charGrams,
@@ -116,7 +119,7 @@ class NgramModel(ModelI):
             if isinstance(train[0], compat.string_types):
                 train = [train]
                 self._W=1
-            elif not isinstance(train[0],collections.Sequence):
+            elif not isinstance(train[0],collections.abc.Sequence):
                 # if you mix strings and generators, you have only yourself
                 #  to blame!
                 for i in range(len(train)):
@@ -466,17 +469,20 @@ def teardown_module(module=None):
     from nltk.corpus import brown
     brown._unload()
 
-def demo():
+from nltk.probability import LidstoneProbDist, WittenBellProbDist
+def demo(estimator_function=LidstoneProbDist):
     from nltk.corpus import brown
-    from nltk.probability import LidstoneProbDist, WittenBellProbDist
-    estimator = lambda fdist, bins: LidstoneProbDist(fdist, 0.2, bins+1)
-#    estimator = lambda fdist, bins: WittenBellProbDist(fdist, 0.2, bins+1)
+    estimator = lambda fdist, bins: estimator_function(fdist, 0.2, bins+1)
     lm = NgramModel(3, brown.sents(categories='news'), estimator=estimator,
                     pad_left=True, pad_right=True)
-    print(lm)
-#    print lm.entropy(sent)
+    print("Built %s using %s as estimator"%(lm,estimator_function))
+    txt="There is no such thing as a free lunch ."
+    print("Computing average per-token entropy for \"%s\", showing the computation:"%txt)
+    e=lm.entropy(txt.split(),True,True,True,True)
+    print("Per-token average: %.2f"%e)
     text = lm.generate(100)
     import textwrap
+    print("--------\nA randomly generated 100-token sequence:")
     for sent in text:
         print('\n'.join(textwrap.wrap(' '.join(sent))))
     return lm
